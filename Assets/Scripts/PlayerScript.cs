@@ -69,17 +69,24 @@ public class PlayerScript : PublicClasses
     void Move(int direction)
     {
         playerTurn = false;
-        Debug.Log("check if new room");
         if (attachedRoom.GetComponent<RoomScript>().CheckIfMoveToNewRoom(x, y))
         {
             roomManager.GetComponent<RoomManager>().AttemptEnter(direction);
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
         else {
             attachedRoom.GetComponent<RoomScript>().UpdateTile(x, y, false, true);
             attachedRoom.GetComponent<RoomScript>().ResetTile(old_x, old_y);
             Location loc = attachedRoom.GetComponent<RoomScript>().GetTileLocation(x, y);
             transform.position = new Vector2(loc.x, loc.y);
-            attachedRoom.GetComponent<RoomScript>().Turn(gameObject.GetComponent<PlayerScript>(), x, y); 
+            attachedRoom.GetComponent<RoomScript>().Turn(gameObject.GetComponent<PlayerScript>(), x, y);
+
+            Vector3 rot = new Vector3(0f, 0f, 0f);
+            if (direction == 0) rot = new Vector3(0f, 0f, 90f);
+            else if (direction == 1) rot = new Vector3(0f, 0f, 0f);
+            else if (direction == 2) rot = new Vector3(0f, 0f, 270f);
+            else if (direction == 3) rot = new Vector3(0f, 180f, 0f);
+            transform.localEulerAngles = rot;
         }
     }
 

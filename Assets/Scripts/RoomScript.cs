@@ -46,7 +46,6 @@ public class RoomScript : PublicClasses
             for (int i = 0; i < ROOMSIZEX * ROOMSIZEY; i++)
             {
                 Tile tile = new Tile(emptyCellSprite);
-                tile.dangerTimer = 1;
                 TileGrid.Add(tile);
                 DisplayGrid.Add(emptyCellSprite);
                 con = new Connections();
@@ -58,13 +57,11 @@ public class RoomScript : PublicClasses
     public void GenerateRoom(Connections connections)
     {
         //TODO Basic room generation and then walking between basic rooms should work. Should be fun
-        Debug.Log("Generating room");
         con = connections;
 
         for (int i = 0; i < ROOMSIZEX * ROOMSIZEY; i++)
         {
             Tile tile = new Tile(emptyCellSprite);
-            tile.dangerTimer = 1;
             TileGrid.Add(tile);
             DisplayGrid.Add(emptyCellSprite);
             con = new Connections();
