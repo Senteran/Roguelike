@@ -81,7 +81,7 @@ public class RoomManager : PublicClasses
                         y = rm.room.GetComponent<RoomScript>().ROOMSIZEY / 2;
                         break;
                 }
-                rm.room.GetComponent<RoomScript>().UpdateTile(x, y, false, true, false, false, 0, Player);
+                rm.room.GetComponent<RoomScript>().UpdateTile(x, y, false, true, false, false, Player);
                 Player.GetComponent<PlayerScript>().x = x;
                 Player.GetComponent<PlayerScript>().y = y;
 

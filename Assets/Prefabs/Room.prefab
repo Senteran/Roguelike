@@ -48,6 +48,8 @@ MonoBehaviour:
   emptyCellSprite: {fileID: 21300000, guid: 35878f329aafc3447aa2c862362405b2, type: 3}
   TilePrefab: {fileID: 4774814284274972909, guid: c52ec418adcc2d347a6ed47480457a8c, type: 3}
   dangerPrefab: {fileID: 6416281140846819769, guid: 885b0fea35023ee4a916e5218f914697, type: 3}
+  EnemyPrefabs:
+  - {fileID: 7553519054315876550, guid: 8f009dd8b70993d4b89daf29638b5397, type: 3}
   isStartingRoom: 0
   isActive: 0
   openExits: 1

@@ -63,6 +63,22 @@ public class PlayerScript : PublicClasses
                     Move(2);
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                Attack(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                Attack(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                Attack(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                Attack(3);
+            }
         }
     }
 
@@ -79,7 +95,7 @@ public class PlayerScript : PublicClasses
             attachedRoom.GetComponent<RoomScript>().ResetTile(old_x, old_y);
             Location loc = attachedRoom.GetComponent<RoomScript>().GetTileLocation(x, y);
             transform.position = new Vector2(loc.x, loc.y);
-            attachedRoom.GetComponent<RoomScript>().Turn(gameObject.GetComponent<PlayerScript>(), x, y);
+            attachedRoom.GetComponent<RoomScript>().Turn(this, x, y);
 
             Vector3 rot = new Vector3(0f, 0f, 0f);
             if (direction == 0) rot = new Vector3(0f, 0f, 90f);
@@ -90,15 +106,20 @@ public class PlayerScript : PublicClasses
         }
     }
 
+    private void Attack(int direction)
+    {
+        attachedRoom.GetComponent<RoomScript>().Turn(this, x, y);
+    }
+
     public void Turn()
     {
         playerTurn = true;
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
         Debug.Log("Took damage");
-        health--;
+        health -= damage;
         if(health <= 0)
         {
             Death();

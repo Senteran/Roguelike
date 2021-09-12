@@ -15,6 +15,60 @@ public class PublicClasses : MonoBehaviour
         public float y;
     }
 
+    public class WorldLocation
+    {
+        public WorldLocation(int xSet, int ySet)
+        {
+            x = xSet;
+            y = ySet;
+        }
+        public WorldLocation(WorldLocation loc)
+        {
+            x = loc.x;
+            y = loc.y;
+        }
+        public int x;
+        public int y;
+
+        public bool Adjacent(WorldLocation loc)
+        {
+            int x1 = x;
+            int x2 = loc.x;
+            int y1 = y;
+            int y2 = loc.y;
+
+            if (x1 == x2)
+            {
+                if (y1 + 1 == y2) return true;
+                if (y1 - 1 == y2) return true;
+            }
+            if (y1 == y2)
+            {
+                if (x1 + 1 == x2) return true;
+                if (x1 - 1 == x2) return true;
+            }
+            return false;
+        }
+        public bool AdjacentIncDiagonal(WorldLocation loc)
+        {
+            int x1 = x;
+            int x2 = loc.x;
+            int y1 = y;
+            int y2 = loc.y;
+
+            if (x1 == x2 && y1 == y2 + 1) return true;
+            if (x1 == x2 - 1 && y1 == y2 + 1) return true;
+            if (x1 == x2 - 1 && y1 == y2) return true;
+            if (x1 == x2 - 1 && y1 == y2 - 1) return true;
+            if (x1 == x2 && y1 == y2 - 1) return true;
+            if (x1 == x2 + 1 && y1 == y2 - 1) return true;
+            if (x1 == x2 + 1 && y1 == y2) return true;
+            if (x1 == x2 + 1 && y1 == y2 + 1) return true;
+
+            return false;
+        }
+    }
+
     public class Room
     {
         public Room(int xLoc, int yLoc, GameObject obj, Connections connections)

@@ -12,6 +12,8 @@ public class RoomScript : PublicClasses
     public GameObject TilePrefab;
     public GameObject dangerPrefab;
 
+    public GameObject[] EnemyPrefabs;
+
     public bool isStartingRoom = false;
     public bool isActive = false;
     public bool openExits = false;
@@ -33,7 +35,7 @@ public class RoomScript : PublicClasses
         public GameObject attachedObject { get; set; } = null;
         public Sprite sprite { get; set; }
     }
-    List<Tile> TileGrid = new List<Tile>();
+    public List<Tile> TileGrid = new List<Tile>();
     List<Sprite> DisplayGrid = new List<Sprite>();
     List<GameObject> displayTiles = new List<GameObject>();
     List<GameObject> enemies = new List<GameObject>();
@@ -66,9 +68,15 @@ public class RoomScript : PublicClasses
             DisplayGrid.Add(emptyCellSprite);
             con = new Connections();
         }
-
+        for (int j = 0; j < 1; j++)
+        {
+            GameObject o = Instantiate(EnemyPrefabs[0], transform);
+            o.GetComponent<EnemyTurnScript>().Create(ROOMSIZEX / 2, ROOMSIZEY / 2);
+            Location loc = GetTileLocation(ROOMSIZEX / 2, ROOMSIZEY / 2);
+            o.transform.position = new Vector2(loc.x, loc.y);
+            enemies.Add(o);
+        }
         RefreshDisplay();
-        Debug.Log(con.GetLocationString());
     }
 
     void RefreshDisplay()
@@ -90,7 +98,7 @@ public class RoomScript : PublicClasses
                 o.GetComponent<SpriteRenderer>().enabled = true;
                 o.GetComponent<SpriteRenderer>().sprite = TileGrid[y * ROOMSIZEY + x].sprite;
                 Location loc = GetTileLocation(x, y);
-                o.transform.localPosition = new Vector2(loc.x, loc.y);
+                o.transform.localPosition = new Vector3(loc.x, loc.y, 1f);
                 displayTiles.Add(o);
 
                 if(TileGrid[y * ROOMSIZEY + x].dangerTimer > 0)
@@ -112,7 +120,7 @@ public class RoomScript : PublicClasses
             {
                 if (TileGrid[y * ROOMSIZEY + x].player && TileGrid[y * ROOMSIZEY + x].dangerTimer == 1)
                 {
-                    player.TakeDamage();
+                    player.TakeDamage(1);
                 }
                 if(TileGrid[y * ROOMSIZEY + x].dangerTimer != 0)
                 {
@@ -122,18 +130,28 @@ public class RoomScript : PublicClasses
         }
         RefreshDisplay();
         //TODO something about this, get the enemies x and y position, probably through a new class
-        foreach (GameObject o in enemies) o.GetComponent<EnemyTurnScript>().Turn(xPlayer, yPlayer, 0, 0);
+        foreach (GameObject o in enemies) o.GetComponent<EnemyTurnScript>().Turn(xPlayer, yPlayer, this);
         player.Turn();
     }
 
-    public void UpdateTile(int x, int y, bool empty = true, bool player = false, bool blockade = false, bool inDanger = false, int dangerTimer = 0, GameObject attachedObject = null)
+    public void UpdateTile(int x, int y, bool empty = true, bool player = false, bool blockade = false, bool inDanger = false, GameObject attachedObject = null)
     {
         TileGrid[y * ROOMSIZEY + x].empty = empty;
         TileGrid[y * ROOMSIZEY + x].player = player;
         TileGrid[y * ROOMSIZEY + x].blockade = blockade;
         TileGrid[y * ROOMSIZEY + x].inDanger = inDanger;
-        TileGrid[y * ROOMSIZEY + x].dangerTimer = dangerTimer;
         TileGrid[y * ROOMSIZEY + x].attachedObject = attachedObject;
+    }
+    public void SetTileDanger(int x, int y, int dangerTimer)
+    {
+        if(TileGrid[y * ROOMSIZEY + x].dangerTimer == 0)
+        {
+            TileGrid[y * ROOMSIZEY + x].dangerTimer = dangerTimer;
+        }
+        else if(TileGrid[y * ROOMSIZEY + x].dangerTimer > dangerTimer)
+        {
+            TileGrid[y * ROOMSIZEY + x].dangerTimer = dangerTimer;
+        }
     }
     public void AttachGameObject(int x, int y, GameObject obj)
     {
@@ -152,6 +170,10 @@ public class RoomScript : PublicClasses
     public Location GetTileLocation(int x , int y)
     {
         return new Location(ROOMSIZEX / -2 + (ROOMSIZEX % 2 == 0 ? 0.5f : 0f) + x, ROOMSIZEY / 2 - (ROOMSIZEY % 2 == 0 ? 0.5f : 0f) - y);
+    }
+    public Vector2 GetTileLocationAsVector(int x, int y)
+    {
+        return new Vector2(ROOMSIZEX / -2 + (ROOMSIZEX % 2 == 0 ? 0.5f : 0f) + x, ROOMSIZEY / 2 - (ROOMSIZEY % 2 == 0 ? 0.5f : 0f) - y);
     }
 
     public Location GetStartingPlayerLocation()
